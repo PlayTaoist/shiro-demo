@@ -11,5 +11,7 @@ public interface UserService {
 
     public User findByName(String name);
     
-    public User selectByPrimaryKey(Integer id);
+    public User selectByPrimaryKey(String id);
+    
+    public int saveUser(User user);
 }

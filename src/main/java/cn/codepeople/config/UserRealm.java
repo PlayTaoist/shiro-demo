@@ -34,7 +34,7 @@ public class UserRealm extends AuthorizingRealm {
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
-        User entity = userService.selectByPrimaryKey(user.getId());
+        User entity = userService.selectByPrimaryKey(user.getUserId());
         authorizationInfo.addStringPermission(entity.getPerms());
         
         return authorizationInfo;

@@ -5,25 +5,45 @@
  */
 package cn.codepeople.controller;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.baidu.fsg.uid.UidGenerator;
+
+import cn.codepeople.entity.User;
+import cn.codepeople.service.UserService;
+import cn.codepeople.util.ShiroUtil;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @Slf4j
 public class UserController {
     
+    @Autowired
+    private UidGenerator uidGenerator;
+    @Autowired
+    private UserService userService;
     @GetMapping("hello")
     public String hello(Model model) {
         model.addAttribute("name", "博客网站!");
+        long uid0 = uidGenerator.getUID();
+        long uid1 = uidGenerator.getUID();
+        long uid2 = uidGenerator.getUID();
+        long uid3 = uidGenerator.getUID();
+        log.info("生成的UID编码是1===>{}&{}", uid0, uidGenerator.parseUID(uid0));
+        log.info("生成的UID编码是2===>{}&{}", uid1, uidGenerator.parseUID(uid1));
+        log.info("生成的UID编码是3===>{}&{}", uid2, uidGenerator.parseUID(uid2));
+        log.info("生成的UID编码是4===>{}&{}", uid3, uidGenerator.parseUID(uid3));
         return "index.html";
     }
     
@@ -32,6 +52,17 @@ public class UserController {
         return "/user/add.html";
     }
     
+    @PostMapping("add")
+    @ResponseBody
+    public int addUserPost(String name, String password) {
+        User user = new User();
+        user.setUserId(Long.toString(uidGenerator.getUID()));
+        user.setName(name);
+        String salt = RandomStringUtils.randomAlphanumeric(20);
+        user.setPassword(ShiroUtil.sha256(password, salt));
+        user.setPerms("sys:user:add");
+        return userService.saveUser(user);
+    }
     @GetMapping("/update")
     public String updateUser() {
         return "/user/update.html";
