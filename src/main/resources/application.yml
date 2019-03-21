@@ -5,10 +5,8 @@ server:
         max-threads: 1000
         min-spare-threads: 30
     port: 8002
-    session:
-        timeout:7200
     servlet:
-        context-path: /sys
+        context-path: /sys        session:          timeout: 7200
 # DataSource
 spring:
   datasource:
@@ -37,6 +35,10 @@ spring:
 mybatis:
   type-aliases-package: cn.codepeople.entity
   mapper-locations:  classpath:cn/codepeople/mapper/*.xml
+#请求地址常量
+accessTokenUrl: https://open.ys7.com/api/lapp/token/get
+appKey: 55e1c99501584748b62a1e1e69809f8e
+appSecret: 154ccc7dfc85af4572335aa375088dd5
 # FastDFS
 # ===================================================================
 # 分布式文件系统FDFS配置
